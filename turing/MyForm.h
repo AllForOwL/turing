@@ -24,7 +24,25 @@ namespace turing {
 	MachineTuring* m_MachineTuring;
 	int* m_arrayValueTopLabel;
 	String^ m_strAlphabet;
-	int m_iCountSymbol;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q1;
+	public: 
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q2;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q3;
+
+	public: 
+
+
+
+
+
+
+
+
+	public: 
+
+
+
+			 int m_iCountSymbol;
 
 	public:
 		MyForm(void)
@@ -103,15 +121,15 @@ namespace turing {
 	private: System::Windows::Forms::TextBox^  textBox2;
 	public: 
 
-	private: System::Windows::Forms::Button^  button1;
+
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
 	public: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  column_Q1;
+
 	public: 
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  column_Q2;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^  column_Q3;
+
+
 	private: System::Windows::Forms::Button^  button4;
 	private: System::Windows::Forms::Button^  button5;
 
@@ -138,13 +156,12 @@ namespace turing {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->trackBar1 = (gcnew System::Windows::Forms::TrackBar());
 			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
-			this->column_Q1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->column_Q2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->column_Q3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Q1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Q2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Q3 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->button4 = (gcnew System::Windows::Forms::Button());
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button6 = (gcnew System::Windows::Forms::Button());
@@ -197,23 +214,15 @@ namespace turing {
 			this->textBox2->TabIndex = 3;
 			this->textBox2->TextChanged += gcnew System::EventHandler(this, &MyForm::textBox2_TextChanged);
 			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(230, 249);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(59, 23);
-			this->button1->TabIndex = 5;
-			this->button1->Text = L"add left";
-			this->button1->UseVisualStyleBackColor = true;
-			// 
 			// button2
 			// 
 			this->button2->Location = System::Drawing::Point(299, 249);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(63, 23);
 			this->button2->TabIndex = 6;
-			this->button2->Text = L"add right";
+			this->button2->Text = L"добавить";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
 			// button3
 			// 
@@ -221,33 +230,34 @@ namespace turing {
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(64, 23);
 			this->button3->TabIndex = 7;
-			this->button3->Text = L"remove";
+			this->button3->Text = L"удалить";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->column_Q1, 
-				this->column_Q2, this->column_Q3});
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->Q1, this->Q2, 
+				this->Q3});
 			this->dataGridView1->Location = System::Drawing::Point(14, 281);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(440, 275);
+			this->dataGridView1->Size = System::Drawing::Size(822, 275);
 			this->dataGridView1->TabIndex = 8;
 			// 
-			// column_Q1
+			// Q1
 			// 
-			this->column_Q1->HeaderText = L"Q1";
-			this->column_Q1->Name = L"column_Q1";
+			this->Q1->HeaderText = L"Q1";
+			this->Q1->Name = L"Q1";
 			// 
-			// column_Q2
+			// Q2
 			// 
-			this->column_Q2->HeaderText = L"Q2";
-			this->column_Q2->Name = L"column_Q2";
+			this->Q2->HeaderText = L"Q2";
+			this->Q2->Name = L"Q2";
 			// 
-			// column_Q3
+			// Q3
 			// 
-			this->column_Q3->HeaderText = L"Q3";
-			this->column_Q3->Name = L"column_Q3";
+			this->Q3->HeaderText = L"Q3";
+			this->Q3->Name = L"Q3";
 			// 
 			// button4
 			// 
@@ -319,7 +329,6 @@ namespace turing {
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
-			this->Controls->Add(this->button1);
 			this->Controls->Add(this->textBox2);
 			this->Controls->Add(this->trackBar1);
 			this->Controls->Add(this->groupBox1);
@@ -346,6 +355,21 @@ namespace turing {
 				{
 					m_labelsBottom[i]->Text = "0";
 				}
+
+				//dataGridView1->ColumnCount = 4;
+				//dataGridView1->RowCount = 2;
+				
+				//dataGridView1->RowHeadersVisible = false;
+				//dataGridView1->ColumnHeadersVisible = false;
+
+				//dataGridView1->Rows[0]->Cells[0]->Value = "";
+				//dataGridView1->Rows[0]->Cells[1]->Value = "Q1";
+				//dataGridView1->Rows[0]->Cells[2]->Value = "Q2";
+				//dataGridView1->Rows[0]->Cells[3]->Value = "Q3";
+				//dataGridView1->Rows[0]->Cells[1]->Value = "Q4";
+				//dataGridView1->Rows[0]->Cells[2]->Value = "Q5";
+				//dataGridView1->Rows[0]->Cells[3]->Value = "Q3";
+
 
 			 }
 	private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
@@ -416,27 +440,40 @@ private: System::Void comboBox2_Click(System::Object^  sender, System::EventArgs
 		 }
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 int countLetter = m_strAlphabet->Length;
+
 			 m_strAlphabet = textBox2->Text;
+
+			 if (countLetter <= m_strAlphabet->Length)
+			 {
+				 for (int i = countLetter; i < m_strAlphabet->Length; i++)
+				 {
+					 ++dataGridView1->RowCount;
+					 dataGridView1->Rows[i]->HeaderCell->Value = m_strAlphabet[i].ToString();
+				 }
+			 }
+			 else if (countLetter > m_strAlphabet->Length)
+			 {
+				 dataGridView1->RowCount = m_strAlphabet->Length;
+					
+				 for (int i = 0; i < m_strAlphabet->Length; i++)
+				 {
+					 dataGridView1->Rows[i]->HeaderCell->Value = m_strAlphabet[i].ToString();
+				 }
+
+			 }
 		 }
 private: System::Void comboBox2_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) 
 		 {
-			 /*if (comboBox2->Items->Count != 0)
-			  {
-				  for (int i = 0; i < m_strAlphabet->Length; i++)
-				 {
-					 comboBox2->Items->RemoveAt(i);
-				 }	
-			 }*/
+			if (m_strAlphabet->Length != 0)
+			{
+				for (int i = m_iCountSymbol; i < m_strAlphabet->Length; i++)
+			    {
+					comboBox2->Items->Add(m_strAlphabet[i]);
+			    }
 
-			  if (m_strAlphabet->Length != 0)
-			  {
-				  for (int i = m_iCountSymbol; i < m_strAlphabet->Length; i++)
-				  {
-					  comboBox2->Items->Add(m_strAlphabet[i]);
-				  }
-
-				  m_iCountSymbol = m_strAlphabet->Length;
-			  }
+				m_iCountSymbol = m_strAlphabet->Length;
+			}
 		 }
 private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -452,6 +489,26 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 					 m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[cell].ToString();
 				 }
 			 }
+		 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
+		 }
+private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int colCount = dataGridView1->ColumnCount;
+			 ++colCount;
+
+			 String^ nameColumn = "Q" + colCount.ToString();
+
+			 ++dataGridView1->ColumnCount;
+
+			 --colCount;
+			 dataGridView1->Columns[colCount]->HeaderCell->Value = nameColumn;
+		 }
+private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 --dataGridView1->ColumnCount;
 		 }
 };
 }
