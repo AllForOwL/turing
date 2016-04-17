@@ -23,6 +23,8 @@ namespace turing {
 
 	MachineTuring* m_MachineTuring;
 	int* m_arrayValueTopLabel;
+	String^ m_strAlphabet;
+	int m_iCountSymbol;
 
 	public:
 		MyForm(void)
@@ -31,7 +33,9 @@ namespace turing {
 			
 			m_MachineTuring = new MachineTuring();
 			m_arrayValueTopLabel = new int[21];			
-			
+			m_strAlphabet = "";
+			m_iCountSymbol = 0;
+
 			int value = -10;
 
 			for (int i = 0; i < 21; i++)
@@ -191,6 +195,7 @@ namespace turing {
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(682, 20);
 			this->textBox2->TabIndex = 3;
+			this->textBox2->TextChanged += gcnew System::EventHandler(this, &MyForm::textBox2_TextChanged);
 			// 
 			// button1
 			// 
@@ -258,12 +263,13 @@ namespace turing {
 			// button5
 			// 
 			this->button5->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 30.75F));
-			this->button5->Location = System::Drawing::Point(894, 141);
+			this->button5->Location = System::Drawing::Point(804, 138);
 			this->button5->Name = L"button5";
 			this->button5->Size = System::Drawing::Size(53, 54);
 			this->button5->TabIndex = 1;
 			this->button5->Text = L">";
 			this->button5->UseVisualStyleBackColor = true;
+			this->button5->Click += gcnew System::EventHandler(this, &MyForm::button5_Click);
 			// 
 			// button6
 			// 
@@ -273,15 +279,20 @@ namespace turing {
 			this->button6->TabIndex = 12;
 			this->button6->Text = L"Применить";
 			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &MyForm::button6_Click);
 			// 
 			// comboBox1
 			// 
 			this->comboBox1->FormattingEnabled = true;
 			this->comboBox1->Location = System::Drawing::Point(446, 54);
+			this->comboBox1->MaxDropDownItems = 100;
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(100, 21);
 			this->comboBox1->TabIndex = 13;
 			this->comboBox1->Text = L"Ячейка";
+			this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::comboBox1_SelectedIndexChanged);
+			this->comboBox1->Click += gcnew System::EventHandler(this, &MyForm::comboBox1_Click);
+			this->comboBox1->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MyForm::comboBox1_KeyPress);
 			// 
 			// comboBox2
 			// 
@@ -291,12 +302,15 @@ namespace turing {
 			this->comboBox2->Size = System::Drawing::Size(90, 21);
 			this->comboBox2->TabIndex = 14;
 			this->comboBox2->Text = L"Значение";
+			this->comboBox2->ClientSizeChanged += gcnew System::EventHandler(this, &MyForm::comboBox2_ClientSizeChanged);
+			this->comboBox2->Click += gcnew System::EventHandler(this, &MyForm::comboBox2_Click);
+			this->comboBox2->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::comboBox2_MouseClick);
 			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1025, 653);
+			this->ClientSize = System::Drawing::Size(859, 565);
 			this->Controls->Add(this->comboBox2);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->button6);
@@ -348,7 +362,96 @@ private: System::Void label2_Click(System::Object^  sender, System::EventArgs^  
 		 }
 private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			
+			 for (int i = 0; i < 21; i++)
+			 {
+				 ++m_arrayValueTopLabel[i]; 
+			 }
+
+			 for (int i = 0; i < 21; i++)
+			 {
+				m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
+				m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+			 }
+		 }
+private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 for (int i = 0; i < 21; i++)
+			 {
+				 --m_arrayValueTopLabel[i]; 
+			 }
+
+			 for (int i = 0; i < 21; i++)
+			 {
+				m_labelsTop[i]->Text    = m_arrayValueTopLabel[i].ToString();
+				m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+			 }
+		 }
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+		 }
+private: System::Void comboBox1_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) 
+		 {
+			 
+		 }
+private: System::Void comboBox1_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 if (comboBox1->Items->Count != 0)
+			 {
+				 for (int i = 0; i < 21; i++)
+				 {
+					 comboBox1->Items->RemoveAt(0);
+				 }	
+			 }
+
+			 for (int i = 0; i < 21; i++)
+			 {
+				 comboBox1->Items->Add(m_arrayValueTopLabel[i].ToString());
+			 }
+		 }
+private: System::Void comboBox2_ClientSizeChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void comboBox2_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			  
+		 }
+private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 m_strAlphabet = textBox2->Text;
+		 }
+private: System::Void comboBox2_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) 
+		 {
+			 /*if (comboBox2->Items->Count != 0)
+			  {
+				  for (int i = 0; i < m_strAlphabet->Length; i++)
+				 {
+					 comboBox2->Items->RemoveAt(i);
+				 }	
+			 }*/
+
+			  if (m_strAlphabet->Length != 0)
+			  {
+				  for (int i = m_iCountSymbol; i < m_strAlphabet->Length; i++)
+				  {
+					  comboBox2->Items->Add(m_strAlphabet[i]);
+				  }
+
+				  m_iCountSymbol = m_strAlphabet->Length;
+			  }
+		 }
+private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int cell  = Convert::ToInt16(comboBox1->Text);
+			 int value = Convert::ToInt16(comboBox2->Text);
+
+			 m_MachineTuring->m_mapTape[cell] = value;
+
+			 for (int i = 0; i < 21; i++)
+			 {
+				 if (m_arrayValueTopLabel[i] == cell)
+				 {
+					 m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[cell].ToString();
+				 }
+			 }
 		 }
 };
 }
