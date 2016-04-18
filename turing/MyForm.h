@@ -528,7 +528,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 			 char direction = '.';
 			 char valueTape = 0;
 			 char valueTapeNext = 0;
-			 int currentRow = 0;
+			 int currentRow = -1;
 			 char category = 0;
 
 			 while (arraySymbolCell->Length != 0)
@@ -569,15 +569,22 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 					  valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
 				 }
 
-				 currentRow = 0;
-
+				 currentRow = -1;
+				
+				 valueTape += 48;
 				 // определ€ем его строку
 				 for (int i = 0; i < m_strAlphabet->Length; i++)
-				 {
-					 if (m_strAlphabet[i] == valueTape)
+				 { int i_ = m_strAlphabet[i];
+					 if (i_ == valueTape)
 					 {
 						 currentRow = i;
 					 }
+				 }
+
+				 if (currentRow == -1)
+				 {
+					 MessageBox::Show("неизвестна€ буква алфавита");
+					 return;
 				 }
 
 				 // читаем значение таблицы
@@ -588,7 +595,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 					 return;
 				 }
 
-				 if (System::Convert::ToString(dataGridView1->Rows[0]->Cells[category]->Value) == "")
+				 if (System::Convert::ToString(dataGridView1->Rows[currentRow]->Cells[category]->Value) == "")
 				 {
 					 MessageBox::Show("нету значени€ в €чейке");
 					 return;
