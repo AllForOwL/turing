@@ -3,6 +3,7 @@
 #include "MachineTuring.h"
 #include <list>
 #include <vector>
+#include <string>
 
 namespace turing {
 
@@ -24,25 +25,16 @@ namespace turing {
 	MachineTuring* m_MachineTuring;
 	int* m_arrayValueTopLabel;
 	String^ m_strAlphabet;
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q1;
 	public: 
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q3;
+	private: System::Windows::Forms::Button^  button1;
 
 	public: 
 
-
-
-
-
-
-
-
-	public: 
-
-
-
-			 int m_iCountSymbol;
+		int m_iCountSymbol;
 
 	public:
 		MyForm(void)
@@ -167,6 +159,7 @@ namespace turing {
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
@@ -241,8 +234,10 @@ namespace turing {
 				this->Q3});
 			this->dataGridView1->Location = System::Drawing::Point(14, 281);
 			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersWidth = 45;
 			this->dataGridView1->Size = System::Drawing::Size(822, 275);
 			this->dataGridView1->TabIndex = 8;
+			this->dataGridView1->Enter += gcnew System::EventHandler(this, &MyForm::dataGridView1_Enter);
 			// 
 			// Q1
 			// 
@@ -283,7 +278,7 @@ namespace turing {
 			// 
 			// button6
 			// 
-			this->button6->Location = System::Drawing::Point(679, 54);
+			this->button6->Location = System::Drawing::Point(772, 83);
 			this->button6->Name = L"button6";
 			this->button6->Size = System::Drawing::Size(75, 23);
 			this->button6->TabIndex = 12;
@@ -294,7 +289,7 @@ namespace turing {
 			// comboBox1
 			// 
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(446, 54);
+			this->comboBox1->Location = System::Drawing::Point(539, 83);
 			this->comboBox1->MaxDropDownItems = 100;
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(100, 21);
@@ -307,7 +302,7 @@ namespace turing {
 			// comboBox2
 			// 
 			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Location = System::Drawing::Point(568, 54);
+			this->comboBox2->Location = System::Drawing::Point(661, 83);
 			this->comboBox2->Name = L"comboBox2";
 			this->comboBox2->Size = System::Drawing::Size(90, 21);
 			this->comboBox2->TabIndex = 14;
@@ -316,11 +311,22 @@ namespace turing {
 			this->comboBox2->Click += gcnew System::EventHandler(this, &MyForm::comboBox2_Click);
 			this->comboBox2->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::comboBox2_MouseClick);
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(575, 24);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->TabIndex = 15;
+			this->button1->Text = L"пуск";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click_1);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(859, 565);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->comboBox2);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->button6);
@@ -509,6 +515,103 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 --dataGridView1->ColumnCount;
+		 }
+private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 dataGridView1->Update();
+
+			 const char point = '.';
+			 const char more  = '>';
+			 const char less  = '<';
+
+			 String^ arraySymbolCell = "a";
+			 char direction = '.';
+			 char valueTape = 0;
+			 char valueTapeNext = 0;
+			 int currentRow = 0;
+			 char category = 0;
+
+			 while (arraySymbolCell->Length != 0)
+			 {
+				 // читаем значение ленты
+				 if (direction == point)
+				 {				 
+					valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
+				 }
+				 else if (direction == more)
+				 {
+					 for (int i = 0; i < 21; i++)
+					 {
+						 ++m_arrayValueTopLabel[i]; 
+					 }
+
+					 for (int i = 0; i < 21; i++)
+					 {
+						m_labelsTop[i]->Text    = m_arrayValueTopLabel[i].ToString();
+						m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+					 }
+
+					 valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
+				 }
+				 else if (direction == less)
+				 {
+					 for (int i = 0; i < 21; i++)
+					 {
+						 --m_arrayValueTopLabel[i]; 
+					 }
+
+					 for (int i = 0; i < 21; i++)
+					 {
+						m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
+						m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+					 }
+
+					  valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
+				 }
+
+				 currentRow = 0;
+
+				 // определяем его строку
+				 for (int i = 0; i < m_strAlphabet->Length; i++)
+				 {
+					 if (m_strAlphabet[i] == valueTape)
+					 {
+						 currentRow = i;
+					 }
+				 }
+
+				 // читаем значение таблицы
+
+				 if (category > dataGridView1->RowCount)
+				 {
+					 MessageBox::Show("нету значения в ячейке");
+					 return;
+				 }
+
+				 if (System::Convert::ToString(dataGridView1->Rows[0]->Cells[category]->Value) == "")
+				 {
+					 MessageBox::Show("нету значения в ячейке");
+					 return;
+				 }
+
+				 arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
+				 
+				 char newValue = arraySymbolCell[0];
+				 direction    =  arraySymbolCell[1];
+				 category     =  arraySymbolCell[2]; 
+				 valueTapeNext = valueTape;
+
+				 category -= 49;
+				 newValue -= 48;
+
+				 // задаем новое значение ленты
+				 m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = newValue;
+	 			 m_labelsBottom[10]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]].ToString();
+			 }
+		 }
+private: System::Void dataGridView1_Enter(System::Object^  sender, System::EventArgs^  e)
+		 {
+			 
 		 }
 };
 }
