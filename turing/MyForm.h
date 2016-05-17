@@ -13,6 +13,7 @@ namespace turing {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// —водка дл€ MyForm
@@ -26,11 +27,14 @@ namespace turing {
 	int* m_arrayValueTopLabel;
 	String^ m_strAlphabet;
 
+	bool m_blStop;
+
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q1;
 	public: 
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q2;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q3;
 	private: System::Windows::Forms::Button^  button1;
+	private: System::Windows::Forms::Button^  button7;
 
 	public: 
 
@@ -41,6 +45,7 @@ namespace turing {
 		{
 			InitializeComponent();
 			
+			m_blStop = false;
 			m_MachineTuring = new MachineTuring();
 			m_arrayValueTopLabel = new int[21];			
 			m_strAlphabet = "";
@@ -160,6 +165,7 @@ namespace turing {
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->button7 = (gcnew System::Windows::Forms::Button());
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
@@ -307,6 +313,7 @@ namespace turing {
 			this->comboBox2->Size = System::Drawing::Size(90, 21);
 			this->comboBox2->TabIndex = 14;
 			this->comboBox2->Text = L"«начение";
+			this->comboBox2->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::comboBox2_SelectedIndexChanged);
 			this->comboBox2->ClientSizeChanged += gcnew System::EventHandler(this, &MyForm::comboBox2_ClientSizeChanged);
 			this->comboBox2->Click += gcnew System::EventHandler(this, &MyForm::comboBox2_Click);
 			this->comboBox2->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::comboBox2_MouseClick);
@@ -321,11 +328,22 @@ namespace turing {
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click_1);
 			// 
+			// button7
+			// 
+			this->button7->Location = System::Drawing::Point(761, 24);
+			this->button7->Name = L"button7";
+			this->button7->Size = System::Drawing::Size(75, 23);
+			this->button7->TabIndex = 16;
+			this->button7->Text = L"—брос";
+			this->button7->UseVisualStyleBackColor = true;
+			this->button7->Click += gcnew System::EventHandler(this, &MyForm::button7_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(859, 565);
+			this->Controls->Add(this->button7);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->comboBox2);
 			this->Controls->Add(this->comboBox1);
@@ -396,7 +414,7 @@ private: System::Void button4_Click(System::Object^  sender, System::EventArgs^ 
 			 {
 				 ++m_arrayValueTopLabel[i]; 
 			 }
-
+			 
 			 for (int i = 0; i < 21; i++)
 			 {
 				m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
@@ -477,6 +495,11 @@ private: System::Void comboBox2_MouseClick(System::Object^  sender, System::Wind
 			    {
 					comboBox2->Items->Add(m_strAlphabet[i]);
 			    }
+				if (!m_blStop)
+				{
+					comboBox2->Items->Add(Convert::ToChar(95));
+					m_blStop = true;
+				}
 
 				m_iCountSymbol = m_strAlphabet->Length;
 			}
@@ -484,15 +507,30 @@ private: System::Void comboBox2_MouseClick(System::Object^  sender, System::Wind
 private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 int cell  = Convert::ToInt16(comboBox1->Text);
-			 int value = Convert::ToInt16(comboBox2->Text);
-
-			 m_MachineTuring->m_mapTape[cell] = value;
+			 
+			 if (Convert::ToChar(comboBox2->Text) != 95)
+			 {
+				 int value = Convert::ToInt16(comboBox2->Text);
+				 m_MachineTuring->m_mapTape[cell] = value;
+			 }	
+			 else //(Convert::ToChar(comboBox2->Text) == '_')
+			 {
+				 m_MachineTuring->m_mapTape[cell] = '_';
+			 }
 
 			 for (int i = 0; i < 21; i++)
 			 {
 				 if (m_arrayValueTopLabel[i] == cell)
 				 {
-					 m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[cell].ToString();
+					 if (m_MachineTuring->m_mapTape[cell] == 95)
+					 {
+						 m_labelsBottom[i]->Text = "_";
+						 m_MachineTuring->m_mapTape[cell] = 95;
+					 }
+					 else
+					 {
+						m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[cell].ToString();
+					 }
 				 }
 			 }
 		 }
@@ -529,6 +567,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 			 char valueTape = 0;
 			 char valueTapeNext = 0;
 			 int currentRow = -1;
+			 int prevRows  = -1;
 			 char category = 0;
 
 			 while (arraySymbolCell->Length != 0)
@@ -548,7 +587,14 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 					 for (int i = 0; i < 21; i++)
 					 {
 						m_labelsTop[i]->Text    = m_arrayValueTopLabel[i].ToString();
-						m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+						if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] != 95)
+						{
+							m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
+						}
+						else
+						{
+							m_labelsBottom[i]->Text = "_";
+						}
 					 }
 
 					 valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
@@ -572,6 +618,12 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				 currentRow = -1;
 				
 				 valueTape += 48;
+
+				 if (valueTape == 95)
+				 {
+					 return;
+				 }
+
 				 // определ€ем его строку
 				 for (int i = 0; i < m_strAlphabet->Length; i++)
 				 { int i_ = m_strAlphabet[i];
@@ -583,7 +635,6 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 
 				 if (currentRow == -1)
 				 {
-					 MessageBox::Show("неизвестна€ буква алфавита");
 					 return;
 				 }
 
@@ -591,18 +642,25 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 
 				 if (category > dataGridView1->RowCount)
 				 {
-					 MessageBox::Show("нету значени€ в €чейке");
 					 return;
 				 }
 
 				 if (System::Convert::ToString(dataGridView1->Rows[currentRow]->Cells[category]->Value) == "")
 				 {
-					 MessageBox::Show("нету значени€ в €чейке");
 					 return;
 				 }
 
-				 arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
+
+				 if (prevRows != currentRow)
+				 {
+					category = 0;
+					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
+				 }
 				 
+		//		 dataGridView1->Rows[currentRow]->Cells[category]->Style->BackColor = Color::ForestGreen;
+		//		 System::Threading::Thread::Sleep(1000);
+		//		// dataGridView1->Rows[currentRow]->Cells[category]->Style->ForeColor = Color::White;
+
 				 char newValue = arraySymbolCell[0];
 				 direction    =  arraySymbolCell[1];
 				 category     =  arraySymbolCell[2]; 
@@ -610,6 +668,8 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 
 				 category -= 49;
 				 newValue -= 48;
+
+				 prevRows = currentRow;
 
 				 // задаем новое значение ленты
 				 m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = newValue;
@@ -619,6 +679,36 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 private: System::Void dataGridView1_Enter(System::Object^  sender, System::EventArgs^  e)
 		 {
 			 
+		 }
+private: System::Void comboBox2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 int value = -10;
+
+			for (int i = 0; i < 21; i++)
+			{
+				m_arrayValueTopLabel[i] = value;
+				++value;
+			}
+
+			 for (int i = 0; i < 21; i++)
+				{
+					m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
+				}
+
+				for (int i = 0; i < 21; i++)
+				{
+					m_labelsBottom[i]->Text = "0";
+				}
+				trackBar1->Value = 10;
+
+				dataGridView1->Rows->Clear();
+
+				m_strAlphabet = "";
+				textBox2->Clear();
+
+				dataGridView1->Refresh();
 		 }
 };
 }
