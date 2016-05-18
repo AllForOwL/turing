@@ -401,8 +401,8 @@ namespace turing {
 				}
 
 				//dataGridView1->ColumnCount = 4;
-				//dataGridView1->RowCount = 2;
-				
+				dataGridView1->RowCount = 1;
+				dataGridView1->Rows[0]->HeaderCell->Value = "_";
 				//dataGridView1->RowHeadersVisible = false;
 				//dataGridView1->ColumnHeadersVisible = false;
 
@@ -640,17 +640,20 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				
 				 valueTape += 48;
 
-				 if (valueTape == 95)
+				 if (valueTape == -113)
 				 {
-					 return;
+					 currentRow = m_strAlphabet->Length;
+//					 return;
 				 }
-
-				 // определяем его строку
-				 for (int i = 0; i < m_strAlphabet->Length; i++)
-				 { int i_ = m_strAlphabet[i];
-					 if (i_ == valueTape)
-					 {
-						 currentRow = i;
+				 else
+				 {
+					 // определяем его строку
+					 for (int i = 0; i < m_strAlphabet->Length; i++)
+					 { int i_ = m_strAlphabet[i];
+						 if (i_ == valueTape)
+						 {
+							 currentRow = i;
+						 }
 					 }
 				 }
 
@@ -699,13 +702,6 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				 m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = newValue;
 	 			 m_labelsBottom[10]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]].ToString();
 
-     			//ThreadStart^ myThreadDelegate = gcnew ThreadStart(&DoWork);
-				//Thread^ thread1 = gcnew Thread( myThreadDelegate );
-				//thread1->Start();
-
-
-				// Wait for newThread to start and go to sleep.
-				
 				 if (comboBox3->Text == "Медленно ")
 				 {
 					for (int i = 0; i < 1000000000; i++) { }
@@ -714,6 +710,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				 {
 					 for (int i = 0;i < 100000000; i++) { }
 				 }
+
 				 this->Update();
 			 }
 		 }
