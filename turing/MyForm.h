@@ -35,6 +35,7 @@ namespace turing {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  Q3;
 	private: System::Windows::Forms::Button^  button1;
 	private: System::Windows::Forms::Button^  button7;
+	private: System::Windows::Forms::ComboBox^  comboBox3;
 
 	public: 
 
@@ -166,6 +167,7 @@ namespace turing {
 			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->trackBar1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
@@ -338,11 +340,22 @@ namespace turing {
 			this->button7->UseVisualStyleBackColor = true;
 			this->button7->Click += gcnew System::EventHandler(this, &MyForm::button7_Click);
 			// 
+			// comboBox3
+			// 
+			this->comboBox3->FormattingEnabled = true;
+			this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Медленно ", L"Быстро"});
+			this->comboBox3->Location = System::Drawing::Point(412, 83);
+			this->comboBox3->Name = L"comboBox3";
+			this->comboBox3->Size = System::Drawing::Size(108, 21);
+			this->comboBox3->TabIndex = 17;
+			this->comboBox3->Text = L"Скорость";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(859, 565);
+			this->Controls->Add(this->comboBox3);
 			this->Controls->Add(this->button7);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->comboBox2);
@@ -367,6 +380,13 @@ namespace turing {
 			this->PerformLayout();
 
 		}
+
+		static void DoWork()
+		{
+			Thread::Sleep( 100 );
+		}
+
+
 #pragma endregion
 	private: System::Void MyForm_Load(System::Object^  sender, System::EventArgs^  e) 
 			 {
@@ -556,6 +576,7 @@ private: System::Void button3_Click(System::Object^  sender, System::EventArgs^ 
 		 }
 private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			
 			 dataGridView1->Update();
 
 			 const char point = '.';
@@ -571,7 +592,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 			 char category = 0;
 
 			 while (arraySymbolCell->Length != 0)
-			 {
+			 {				
 				 // читаем значение ленты
 				 if (direction == point)
 				 {				 
@@ -656,7 +677,10 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 					category = 0;
 					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
 				 }
-				 
+				 else 
+				 {
+					 arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
+				 }
 		//		 dataGridView1->Rows[currentRow]->Cells[category]->Style->BackColor = Color::ForestGreen;
 		//		 System::Threading::Thread::Sleep(1000);
 		//		// dataGridView1->Rows[currentRow]->Cells[category]->Style->ForeColor = Color::White;
@@ -674,6 +698,23 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				 // задаем новое значение ленты
 				 m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = newValue;
 	 			 m_labelsBottom[10]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]].ToString();
+
+     			//ThreadStart^ myThreadDelegate = gcnew ThreadStart(&DoWork);
+				//Thread^ thread1 = gcnew Thread( myThreadDelegate );
+				//thread1->Start();
+
+
+				// Wait for newThread to start and go to sleep.
+				
+				 if (comboBox3->Text == "Медленно ")
+				 {
+					for (int i = 0; i < 1000000000; i++) { }
+				 }
+				 else
+				 {
+					 for (int i = 0;i < 100000000; i++) { }
+				 }
+				 this->Update();
 			 }
 		 }
 private: System::Void dataGridView1_Enter(System::Object^  sender, System::EventArgs^  e)
@@ -684,7 +725,7 @@ private: System::Void comboBox2_SelectedIndexChanged(System::Object^  sender, Sy
 		 }
 private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 int value = -10;
+			int value = -10;
 
 			for (int i = 0; i < 21; i++)
 			{
