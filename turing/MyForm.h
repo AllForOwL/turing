@@ -25,6 +25,7 @@ namespace turing {
 
 	MachineTuring* m_MachineTuring;
 	int* m_arrayValueTopLabel;
+	int  m_iCountLettersOnTape;
 	String^ m_strAlphabet;
 
 	bool m_blStop;
@@ -46,6 +47,7 @@ namespace turing {
 		{
 			InitializeComponent();
 			
+			m_iCountLettersOnTape = 0;
 			m_blStop = false;
 			m_MachineTuring = new MachineTuring();
 			m_arrayValueTopLabel = new int[21];			
@@ -513,6 +515,8 @@ private: System::Void comboBox2_MouseClick(System::Object^  sender, System::Wind
 		 }
 private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 ++m_iCountLettersOnTape;
+
 			 int cell  = Convert::ToInt16(comboBox1->Text);
 			 
 			 if (Convert::ToChar(comboBox2->Text) == 95)
@@ -601,13 +605,14 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 			 const char less  = '<';
 
 			 String^ arraySymbolCell = "a";
-			 char direction = '.';
-			 char valueTape = 0;
-			 char valueTapeNext = 0;
-			 int currentRow = -1;
-			 int prevRows  = -1;
-			 char category = 0;
-			 int lengthAlphabet = arraySymbolCell->Length; 
+			 char direction			 = '.';
+			 char valueTape			 =  0;
+			 char valueTapeNext		 =  0;
+			 int currentRow			 = -1;
+			 int prevRows			 = -1;
+			 char category			 =  0;
+			 int lengthAlphabet	     = m_iCountLettersOnTape;
+			 int countTestedLetters  = 0;
 
 			 while (lengthAlphabet)
 			 {				
@@ -666,22 +671,37 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				if (valueTape == -113)
 				{
 					currentRow = 4;
+					direction = more;
+					--lengthAlphabet;
+					continue;
 				}
 				else if (valueTape == -111)
 				{
 					currentRow = 0;
+					direction = more;
+					--lengthAlphabet;
+					continue;
 				}
 				else if (valueTape == -110)
 				{
 					currentRow = 1;
+					direction = more;
+					--lengthAlphabet;
+					continue;
 				}
 				else if (valueTape == -109)
 				{ 
 					currentRow = 2;
+					direction = more;
+					--lengthAlphabet;
+					continue;
 				}
 				else if (valueTape == -108)
 				{
 					currentRow = 3;
+					direction = more;
+					--lengthAlphabet;
+					continue;
 				}
 				else
 				{
@@ -695,15 +715,9 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 					}
 				}
 
-				if (prevRows != currentRow)
-				{
-					category = 0;
-					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
-				}
-				else 
-				{
-					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
-				}
+				
+				category = 0;
+				arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
 
 				char newValue = arraySymbolCell[0];
 				direction     = arraySymbolCell[1];
@@ -721,7 +735,7 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 
 				if (comboBox3->Text == "Медленно ")
 				{
-				for (int i = 0; i < 1000000000; i++) { }
+					for (int i = 0; i < 1000000000; i++) { }
 				}
 				else
 				{
@@ -729,8 +743,20 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 				}
 				
 				--lengthAlphabet;
+				++countTestedLetters;
 
 				this->Update();
+			 }
+
+			 for (int i = 0; i < 21; i++)
+			 {
+				 if (m_labelsBottom[i]->Text == "a")
+				 {
+					 for (int j = i; j < 20; j++)
+					 {
+						 m_labelsBottom[j]->Text = m_labelsBottom[j+1]->Text;
+					 }
+				 }
 			 }
 		 }
 private: System::Void dataGridView1_Enter(System::Object^  sender, System::EventArgs^  e)
