@@ -400,21 +400,8 @@ namespace turing {
 					m_labelsBottom[i]->Text = "0";
 				}
 
-				//dataGridView1->ColumnCount = 4;
 				dataGridView1->RowCount = 1;
 				dataGridView1->Rows[0]->HeaderCell->Value = "_";
-				//dataGridView1->RowHeadersVisible = false;
-				//dataGridView1->ColumnHeadersVisible = false;
-
-				//dataGridView1->Rows[0]->Cells[0]->Value = "";
-				//dataGridView1->Rows[0]->Cells[1]->Value = "Q1";
-				//dataGridView1->Rows[0]->Cells[2]->Value = "Q2";
-				//dataGridView1->Rows[0]->Cells[3]->Value = "Q3";
-				//dataGridView1->Rows[0]->Cells[1]->Value = "Q4";
-				//dataGridView1->Rows[0]->Cells[2]->Value = "Q5";
-				//dataGridView1->Rows[0]->Cells[3]->Value = "Q3";
-
-
 			 }
 	private: System::Void toolStrip1_ItemClicked(System::Object^  sender, System::Windows::Forms::ToolStripItemClickedEventArgs^  e) {
 			 }
@@ -528,15 +515,31 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 		 {
 			 int cell  = Convert::ToInt16(comboBox1->Text);
 			 
-			 if (Convert::ToChar(comboBox2->Text) != 95)
+			 if (Convert::ToChar(comboBox2->Text) == 95)
+			 {
+				 m_MachineTuring->m_mapTape[cell] = '_';
+			 }
+			 else if (Convert::ToChar(comboBox2->Text) == 97)
+			 {
+				 m_MachineTuring->m_mapTape[cell] = 'a';
+			 }
+			 else if (Convert::ToChar(comboBox2->Text) == 98)
+			 {
+				 m_MachineTuring->m_mapTape[cell] = 'b';
+			 }
+			 else if (Convert::ToChar(comboBox2->Text) == 99)
+			 {
+				 m_MachineTuring->m_mapTape[cell] = 'c';
+			 }
+			 else if (Convert::ToChar(comboBox2->Text) == 100)
+			 {
+				 m_MachineTuring->m_mapTape[cell] = 'd';
+			 }
+			 else
 			 {
 				 int value = Convert::ToInt16(comboBox2->Text);
 				 m_MachineTuring->m_mapTape[cell] = value;
 			 }	
-			 else //(Convert::ToChar(comboBox2->Text) == '_')
-			 {
-				 m_MachineTuring->m_mapTape[cell] = '_';
-			 }
 
 			 for (int i = 0; i < 21; i++)
 			 {
@@ -545,7 +548,22 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 					 if (m_MachineTuring->m_mapTape[cell] == 95)
 					 {
 						 m_labelsBottom[i]->Text = "_";
-						 m_MachineTuring->m_mapTape[cell] = 95;
+					 }
+					 else if (m_MachineTuring->m_mapTape[cell] == 97)
+					 {
+						 m_labelsBottom[i]->Text = "a";
+					 }
+					 else if (m_MachineTuring->m_mapTape[cell] == 98)
+					 {
+						 m_labelsBottom[i]->Text = "b";
+					 }
+					 else if (m_MachineTuring->m_mapTape[cell] == 99)
+					 {
+						 m_labelsBottom[i]->Text = "c";
+					 }
+					 else if (m_MachineTuring->m_mapTape[cell] == 100)
+					 {
+						 m_labelsBottom[i]->Text = "d";
 					 }
 					 else
 					 {
@@ -575,8 +593,7 @@ private: System::Void button3_Click(System::Object^  sender, System::EventArgs^ 
 			 --dataGridView1->ColumnCount;
 		 }
 private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			
+		 {		
 			 dataGridView1->Update();
 
 			 const char point = '.';
@@ -590,128 +607,130 @@ private: System::Void button1_Click_1(System::Object^  sender, System::EventArgs
 			 int currentRow = -1;
 			 int prevRows  = -1;
 			 char category = 0;
+			 int lengthAlphabet = arraySymbolCell->Length; 
 
-			 while (arraySymbolCell->Length != 0)
+			 while (lengthAlphabet)
 			 {				
 				 // читаем значение ленты
-				 if (direction == point)
-				 {				 
-					valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
-				 }
-				 else if (direction == more)
+				 if (direction == more)
 				 {
 					 for (int i = 0; i < 21; i++)
 					 {
 						 ++m_arrayValueTopLabel[i]; 
 					 }
-
-					 for (int i = 0; i < 21; i++)
-					 {
-						m_labelsTop[i]->Text    = m_arrayValueTopLabel[i].ToString();
-						if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] != 95)
-						{
-							m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
-						}
-						else
-						{
-							m_labelsBottom[i]->Text = "_";
-						}
-					 }
-
-					 valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
+					 
 				 }
 				 else if (direction == less)
 				 {
 					 for (int i = 0; i < 21; i++)
 					 {
 						 --m_arrayValueTopLabel[i]; 
-					 }
+					 } 
+				 }
 
-					 for (int i = 0; i < 21; i++)
-					 {
-						m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
+				// { обновление данных внизу ленты }
+				for (int i = 0; i < 21; i++)
+				{
+					m_labelsTop[i]->Text = m_arrayValueTopLabel[i].ToString();
+					if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] == 95)
+					{
+						m_labelsBottom[i]->Text = "_";
+					}
+					else if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] == 97)
+					{
+						m_labelsBottom[i]->Text = "a";
+					}
+					else if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] == 98)
+					{
+						m_labelsBottom[i]->Text = "b";
+					}
+					else if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] == 99)
+					{
+						m_labelsBottom[i]->Text = "c";
+					}
+					else if (m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]] == 100)
+					{
+						m_labelsBottom[i]->Text = "d";
+					}
+					else 
+					{
 						m_labelsBottom[i]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[i]].ToString();
-					 }
+					}
+				}
+				valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
 
-					  valueTape = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]];
-				 }
-
-				 currentRow = -1;
+				currentRow = -1;
 				
-				 valueTape += 48;
+				valueTape += 48;
 
-				 if (valueTape == -113)
-				 {
-					 currentRow = m_strAlphabet->Length;
-//					 return;
-				 }
-				 else
-				 {
-					 // определяем его строку
-					 for (int i = 0; i < m_strAlphabet->Length; i++)
-					 { int i_ = m_strAlphabet[i];
-						 if (i_ == valueTape)
-						 {
-							 currentRow = i;
-						 }
-					 }
-				 }
+				if (valueTape == -113)
+				{
+					currentRow = 4;
+				}
+				else if (valueTape == -111)
+				{
+					currentRow = 0;
+				}
+				else if (valueTape == -110)
+				{
+					currentRow = 1;
+				}
+				else if (valueTape == -109)
+				{ 
+					currentRow = 2;
+				}
+				else if (valueTape == -108)
+				{
+					currentRow = 3;
+				}
+				else
+				{
+					// определяем его строку
+					for (int i = 0; i < m_strAlphabet->Length; i++)
+					{ int i_ = m_strAlphabet[i];
+						if (i_ == valueTape)
+						{
+							currentRow = i;
+						}
+					}
+				}
 
-				 if (currentRow == -1)
-				 {
-					 return;
-				 }
-
-				 // читаем значение таблицы
-
-				 if (category > dataGridView1->RowCount)
-				 {
-					 return;
-				 }
-
-				 if (System::Convert::ToString(dataGridView1->Rows[currentRow]->Cells[category]->Value) == "")
-				 {
-					 return;
-				 }
-
-
-				 if (prevRows != currentRow)
-				 {
+				if (prevRows != currentRow)
+				{
 					category = 0;
 					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
-				 }
-				 else 
-				 {
-					 arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
-				 }
-		//		 dataGridView1->Rows[currentRow]->Cells[category]->Style->BackColor = Color::ForestGreen;
-		//		 System::Threading::Thread::Sleep(1000);
-		//		// dataGridView1->Rows[currentRow]->Cells[category]->Style->ForeColor = Color::White;
+				}
+				else 
+				{
+					arraySymbolCell = dataGridView1->Rows[currentRow]->Cells[category]->Value->ToString();
+				}
 
-				 char newValue = arraySymbolCell[0];
-				 direction    =  arraySymbolCell[1];
-				 category     =  arraySymbolCell[2]; 
-				 valueTapeNext = valueTape;
+				char newValue = arraySymbolCell[0];
+				direction     = arraySymbolCell[1];
+				category      = arraySymbolCell[2]; 
+				valueTapeNext = valueTape;
 
-				 category -= 49;
-				 newValue -= 48;
+				category -= 49;
+				//newValue -= 48;
 
-				 prevRows = currentRow;
+				prevRows = currentRow;
 
-				 // задаем новое значение ленты
-				 m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = newValue;
-	 			 m_labelsBottom[10]->Text = m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]].ToString();
+				// задаем новое значение ленты
+				m_MachineTuring->m_mapTape[m_arrayValueTopLabel[10]] = Convert::ToInt16(newValue);
+				m_labelsBottom[10]->Text = Convert::ToString(arraySymbolCell[0]);
 
-				 if (comboBox3->Text == "Медленно ")
-				 {
-					for (int i = 0; i < 1000000000; i++) { }
-				 }
-				 else
-				 {
-					 for (int i = 0;i < 100000000; i++) { }
-				 }
+				if (comboBox3->Text == "Медленно ")
+				{
+				for (int i = 0; i < 1000000000; i++) { }
+				}
+				else
+				{
+					for (int i = 0; i < 100000000; i++) { }
+				}
+				
+				--lengthAlphabet;
 
-				 this->Update();
+				this->Update();
 			 }
 		 }
 private: System::Void dataGridView1_Enter(System::Object^  sender, System::EventArgs^  e)
